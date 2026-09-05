@@ -1,6 +1,12 @@
 # We want the docker builds to be clean, and as fast as possible. Don't send
 # any half-built stuff in the build context as a pre-caution (also saves copying
 # 180k files in node_modules that isn't used!).
+# Environment files and secrets
+.env
+.env.*
+.secrets/
+
+# Build artifacts and caches
 **/node_modules
 node_modules/*
 node_modules
@@ -9,6 +15,7 @@ dist
 .nx
 /apps/frontend/.next
 /apps/backend/dist
+/apps/orchestrator/dist
 /apps/workers/dist
 /apps/cron/dist
 /apps/commands/dist
