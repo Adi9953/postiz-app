@@ -1,7 +1,6 @@
 services:
   postiz:
     image: ghcr.io/${GHCR_REPO:-adi9953/postiz-app}:${POSTIZ_VERSION:-latest}
-    container_name: postiz
     restart: always
     environment:
       # === Required Application URLs
@@ -57,8 +56,6 @@ services:
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
     ports:
       - '${POSTIZ_PORT:-5000}:5000'
-    networks:
-      - postiz-internal
     depends_on:
       temporal:
         condition: service_healthy
@@ -71,7 +68,6 @@ services:
 
   temporal:
     image: temporalio/auto-setup:1.28.1
-    container_name: temporal
     restart: always
     depends_on:
       temporal-postgresql:
@@ -84,8 +80,6 @@ services:
       - POSTGRES_SEEDS=temporal-postgresql
       - ENABLE_ES=false
       - TEMPORAL_NAMESPACE=default
-    networks:
-      - postiz-internal
     healthcheck:
       test: ["CMD", "temporal", "operator", "cluster", "health"]
       interval: 10s
@@ -95,25 +89,18 @@ services:
 
   temporal-postgresql:
     image: postgres:16-alpine
-    container_name: temporal-postgresql
     restart: always
     environment:
       POSTGRES_USER: ${TEMPORAL_POSTGRES_USER:-temporal}
       POSTGRES_PASSWORD: ${TEMPORAL_POSTGRES_PASSWORD:-temporal}
-      POSTGRES_DB: temporal
+      POSTGRES_DB: postgres
     volumes:
       - temporal-postgres-data:/var/lib/postgresql/data
-    networks:
-      - postiz-internal
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${TEMPORAL_POSTGRES_USER:-temporal} -d temporal"]
+      test: ["CMD-SHELL", "pg_isready -U ${TEMPORAL_POSTGRES_USER:-temporal} -d postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
 
 volumes:
   temporal-postgres-data:
-
-networks:
-  postiz-internal:
-    driver: bridge
