@@ -2,6 +2,7 @@ FROM node:22.20-bookworm-slim
 
 ARG NEXT_PUBLIC_VERSION
 ENV NEXT_PUBLIC_VERSION=$NEXT_PUBLIC_VERSION
+ENV TEMPORAL_ADDRESS=temporal:7233
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ \

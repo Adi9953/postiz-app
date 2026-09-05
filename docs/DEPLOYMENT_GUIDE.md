@@ -137,6 +137,7 @@ CLOUDFLARE_BUCKETNAME=[your-r2-bucket-name]
 CLOUDFLARE_BUCKET_URL=https://[your-r2-public-url-or-domain]
 CLOUDFLARE_REGION=auto
 
+TEMPORAL_ADDRESS=temporal:7233
 TEMPORAL_POSTGRES_USER=temporal
 TEMPORAL_POSTGRES_PASSWORD=<generate_secure_password>
 ```
